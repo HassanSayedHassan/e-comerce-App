@@ -32,7 +32,7 @@ public class Freelancer implements java.io.Serializable {
 	private String experience;
 	@OneToMany(targetEntity = Avis.class, mappedBy = "freelancer", fetch = FetchType.EAGER)
 	private Set<Avis> avis = new HashSet<Avis>();
-	@OneToMany(targetEntity = Evaluation.class, mappedBy = "freelancer")
+	@OneToMany(targetEntity = Evaluation.class, mappedBy = "freelancer",fetch = FetchType.EAGER)
 	private Set<Evaluation> evaluations = new HashSet<Evaluation>();
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "FreelancerCompetances", joinColumns = @JoinColumn(name = "idFreelancer"),

@@ -1,18 +1,149 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="ISO-8859-1">
-<title>Insert title here</title>
-</head>
-<body>
-<div layout:fragment="content"></div>
-	<div class="col-md">
-		<div class="panel panel-primary">
-<div class="panel-heading">Inscription Particulier</div>
-			<div class="panel-body">
-<form th:action="@{/ChercherOffre}" id="offre" th:method="get">
-<div>offres</div>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
-       
+<head>
+<title>Freelancers</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="../static/styles.css"
+	th:href="@{/styles.css}">
+
+</head>
+<style>
+.text-purple {
+	color: var(- -purple);
+}
+
+.sticky-top {
+	transition: padding 0.2s ease;
+}
+
+.stuck .sticky-top {
+	padding-top: 15px;
+}
+</style>
+<script>
+	(new IntersectionObserver(function(e, o) {
+		if (e[0].intersectionRatio > 0) {
+			document.documentElement.removeAttribute('class');
+		} else {
+			document.documentElement.setAttribute('class', 'stuck');
+		}
+		;
+	})).observe(document.querySelector('.position-absolute'));
+</script>
+
+<body>
+	<div th:replace="template :: header"></div>
+
+	<section>
+		<div>
+			<div class="row">
+				<div class="col-12 bg-light py-5">
+						<div  class="col-lg-8 offset-md-4">
+							<form th:action="@{/offremotclé}" th:method="get">
+								<div>
+									<label>entrer offre</label> <input type="text" name="mot" />
+									<button type="submit" class="btn btn-primary">Chercher</button>
+								</div>
+							</form>
+							<form th:action="@{/offres}" th:method="get">
+								<div>
+									<button type="submit" class="btn btn-outline-primary">Tous Afficher</button>
+								</div>
+							</form>
+						</div>
+
+				</div>
+			</div>
+			<span class="position-absolute"> <!-- intersection trigger-->
+			</span>
+			<div class="row">
+				<div class="col-md-2 bg-light py-3 px-1">
+					<div class="sticky-top">
+						<ul class="nav pb-3 flex-md-column justify-content-center p-3">
+							<li class="nav-item text-truncate"><a
+								class="nav-link text-purple d-md-inline d-none" href="#">Top
+									on mobile ↓</a></li>
+							<li class="nav-item text-truncate"><a
+								class="nav-link text-purple" href="#">Link 1</a></li>
+							<li class="nav-item text-truncate"><a
+								class="nav-link text-purple" href="#">Link 9</a></li>
+							<li class="nav-item"><a class="nav-link text-purple"
+								href="#">Link 10</a></li>
+						</ul>
+					</div>
+				</div>
+				<main class="col py-3">
+					<th:block th:each="f: ${offres}">
+						<div class="container mt-3">
+							<div class="media border p-3 w-100">
+								<div class="media-body">
+									<h4 th:text="${f.description}">
+										<i></i>
+									</h4>
+									<a href="#" class="btn btn-outline-primary">Message</a> <span
+										class="badge badge-success float-sm-right"
+										th:text="${f.particulier.nom}"> </span>
+								</div>
+							</div>
+						</div>
+					</th:block>
+					<div class="container">
+					 <ul class="pagination">
+					   <li class="page-item" th:each="p,status:${pages}">
+					    <a  class="page-link" th:href="@{/getPage(pg=${status.index})}" th:text="${status.index}"></a>
+					   </li>
+					 </ul>
+					</div>
+					<h4>The End.</h4>
+				</main>
+				<div class="col-sm-3 py-3">
+					<div class="row sticky-top">
+						<div class="col-12">
+							<h6>Woo-hoo!</h6>
+							<p>Got my arm stuck in a vending machine! Vice sustainable
+								cardigan, Williamsburg master cleanse hella.</p>
+						</div>
+						<div class="col-lg-6">
+							<div class="card card-body mb-4">Put some content here.</div>
+						</div>
+						<div class="col-lg-6">
+							<div class="card card-body mb-4">Maybe ads or links.</div>
+						</div>
+						<div class="col-12">
+							<p>3 wolf moon retro jean shorts chambray sustainable roof
+								party. Shoreditch vegan artisan Helvetica. Tattooed Codeply Echo
+								Helvetica Williamsburg sartorial tote bag distillery Portland
+								before they sold out gastropub taxidermy Vice.</p>
+						</div>
+						<div class="col-lg-6">
+							<div class="card card-body mb-4">Put some content here.</div>
+						</div>
+						<div class="col-lg-6">
+							<div class="card card-body mb-4">Maybe ads or links.</div>
+						</div>
+						<div class="col-12">
+							<hr>
+							<div class="card card-body mb-4">Master crafter foo-bar
+								choo.</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<div th:replace="template :: footer"></div>
 </body>
 </html>

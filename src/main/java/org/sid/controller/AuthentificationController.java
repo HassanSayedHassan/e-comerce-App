@@ -49,7 +49,7 @@ public class AuthentificationController implements WebMvcConfigurer {
 			Freelancer fr = serviceAutentification.inscriptiondufreelancer(free);
 
 			model.addAttribute("freelancer", fr);
-			return "AAProfilFreelancer";
+			return "redirect:/AAloginFreelancer";//"AAProfilFreelancer";
 		}
 	}
 
@@ -66,7 +66,7 @@ public class AuthentificationController implements WebMvcConfigurer {
 		} else if (!particulierForm.getPassword().equals(particulierForm.getRepassword())) {
 			msg = true;
 			model.addAttribute("messagecn", msg);
-			return "BBParticulierForm";
+			return "ParticulierForm";
 		} else {
 			pr.setNom(particulierForm.getNom());
 			pr.setPrenom(particulierForm.getPrenom());
@@ -78,7 +78,7 @@ public class AuthentificationController implements WebMvcConfigurer {
 			Particulier prc = serviceAutentification.inscriptionduparticulier(pr);
 
 			model.addAttribute("particulier", prc);
-			return "BBProfilParticulier";
+			return"redirect:/BBloginParticulier";//"BBProfilParticulier";
 
 		}
 	}

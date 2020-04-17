@@ -26,7 +26,8 @@ public class SecurityController {
 	@RequestMapping("/AAconnexionSuccessFreelancer")
 	public String connexionSuccessFreelancer(HttpServletRequest httpServletRequest) {
 		HttpSession session = httpServletRequest.getSession();
-		SecurityContextHolder cntx = (SecurityContextHolder) session.getAttribute("SPRING_SECURITY_CONTEXT_HOLDER");
+		SecurityContextHolder cntx = (SecurityContextHolder) 
+				session.getAttribute("SPRING_SECURITY_CONTEXT_HOLDER");
 		String username = cntx.getContext().getAuthentication().getName();
 		Freelancer freelancer = researchService.findFreelancerByEmail(username);
 		session.setAttribute("freelancer", freelancer);
@@ -37,7 +38,7 @@ public class SecurityController {
 	@RequestMapping("/AAloginErrorFreelancer")
 	public String loginErrorFreelancer(Model model, HttpSession session) {
 		model.addAttribute("messageForm", true);
-		return "loginFreelancer";
+		return "/sign In/loginFreelancer";
 	}
 
 	@RequestMapping("/BBconnexionParticulier")
@@ -62,7 +63,8 @@ public class SecurityController {
 	@RequestMapping("/BBconnexionSuccessParticulier")
 	public String connexionSuccessParticulier(HttpServletRequest httpServletRequest) {
 		HttpSession session = httpServletRequest.getSession();
-		SecurityContextHolder cntx = (SecurityContextHolder) session.getAttribute("SPRING_SECURITY_CONTEXT_HOLDER");
+		SecurityContextHolder cntx = (SecurityContextHolder) 
+				session.getAttribute("SPRING_SECURITY_CONTEXT_HOLDER");
 		String username = cntx.getContext().getAuthentication().getName();
 		Particulier particulier = researchService.findParticularByEmail(username);
 		session.setAttribute("particulier", particulier);
@@ -73,7 +75,7 @@ public class SecurityController {
 	@RequestMapping("/BBloginErrorParticulier")
 	public String loginErrorParticulier(Model model, HttpSession session) {
 		model.addAttribute("messageForm", true);
-		return "loginParticulier";
+		return "/sign In/loginParticulier";
 	}
 
 	@RequestMapping("/403")

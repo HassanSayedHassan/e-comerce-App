@@ -4,7 +4,6 @@ package org.sid.controller;
 import javax.servlet.http.HttpSession;
 
 import org.sid.entities.Freelancer;
-import org.sid.forms.Login;
 import org.sid.services.EmailService;
 import org.sid.services.ResearchService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +25,12 @@ public class SignInControllerFreelancer implements WebMvcConfigurer {
 	@RequestMapping(value = "/AAloginFreelancer")
 	public String loginFreelancer(Model model) {
 		model.addAttribute("message", false);
-		model.addAttribute("login", new Login());
-		return "loginFreelancer";
+		return "/sign In/loginFreelancer";
 	}
 	
 	@RequestMapping(value = "/forgotPasswordFreelancerPage")
 	public String forgotPasswordFreelancerPage() {
-		return "forgotPasswordFreelancer";
+		return "/sign In/forgotPasswordFreelancer";
 	}
 
 	@RequestMapping(value = "/resetPasswordFreelancer")
@@ -43,19 +41,19 @@ public class SignInControllerFreelancer implements WebMvcConfigurer {
 			emailService.resetPasswordMail(freelancer, validationCode);
 			session.setAttribute("validationCode", validationCode);
 			session.setAttribute("freelancer", freelancer);
-			pageAfter = "resetPasswordFreelancer";
+			pageAfter = "/sign In/resetPasswordFreelancer";
 		} else {
 			model.addAttribute("message_Mail", true);
-			pageAfter = "forgotPasswordFreelancer";
+			pageAfter = "/sign In/forgotPasswordFreelancer";
 		}
 
 		return pageAfter;
 	}
 	
 	@RequestMapping(value = "/resetPasswordFreelancerToPrfile")
-	public String restPassword(Model model, @RequestParam String password, @RequestParam String password2,
+	public String resetPasswordParticulier(Model model, @RequestParam String password, @RequestParam String password2,
 			@RequestParam String validationCode, HttpSession session) {
-		String pageAfter = "redirect:/AAloginFreelancer", currentPage = "resetPasswordFreelancer";
+		String pageAfter = "redirect:/AAloginFreelancer", currentPage = "/sign In/resetPasswordFreelancer";
 		String validationInput = (String) session.getAttribute("validationCode");
 		Freelancer freelancer = (Freelancer) session.getAttribute("freelancer");
 		if (!password.equals(password2)) {

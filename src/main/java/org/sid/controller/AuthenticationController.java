@@ -23,26 +23,20 @@ public class AuthenticationController implements WebMvcConfigurer {
 	private AuthenticationService authenticationService;
 	@Autowired
 	private ResearchService researchService;
-	
-	@RequestMapping("/inscription")
-	public String Inscription(Model model) {
-		model.addAttribute("freelancerForm", new FreelancerForm());
-		return "redirect:/freelancerinscription";
-	}
 
 	@RequestMapping("/freelancerinscription")
-	public String FreelancerRegistration(Model model, @Valid FreelancerForm freelancerForm,
+	public String freelancerRegistration(Model model, @Valid FreelancerForm freelancerForm,
 			BindingResult bindingResult, HttpSession session) {
 		Freelancer free = new Freelancer();
-		boolean msg = false;
+		String page  = "/sign Up/FreelancerForm";
 		if (freelancerForm.getPassword() == null) {
-			return "FreelancerForm";
+			return page;
 		} else if (researchService.findFreelancerByEmail(freelancerForm.getEmail()) != null) {
 			model.addAttribute("message_Mail", true);
-			return "FreelancerForm";
+			return page;
 		} else if (!freelancerForm.getPassword().equals(freelancerForm.getRepassword())) {
 			model.addAttribute("message_Repassword", true);
-			return "FreelancerForm";
+			return page;
 		} else {
 			free.setNom(freelancerForm.getNom());
 			free.setPrenom(freelancerForm.getPrenom());
@@ -61,24 +55,24 @@ public class AuthenticationController implements WebMvcConfigurer {
 			model.addAttribute("freelancer", fr);
 			model.addAttribute("loginFreelancerDone", true);
 			session.setAttribute("toProfile", true);
-			return "redirect:/AAloginFreelancer";// "AAProfilFreelancer";
+			return "redirect:/AAloginFreelancer";
 		}
 	}
 
 	@RequestMapping("/particulierinscription")
-	public String ParticularRegistration(Model model, @Valid ParticulierForm particulierForm,
+	public String particularRegistration(Model model, @Valid ParticulierForm particulierForm,
 			BindingResult bindingResult,HttpSession session) {
 		Particulier pr = new Particulier();
-		boolean msg = false;
+		String page = "/sign Up/ParticulierForm";
 		if (particulierForm.getPassword() == null) {
-			return "ParticulierForm";
+			return page;
 		}else if(researchService.findParticularByEmail(particulierForm.getEmail())!= null) {
 			model.addAttribute("message_Mail", true);
-			return "ParticulierForm";
+			return page;
 		}
 		else if (!particulierForm.getPassword().equals(particulierForm.getRepassword())) {
 			model.addAttribute("message_Repassword", true);
-			return "ParticulierForm";
+			return page;
 		} else {
 			pr.setNom(particulierForm.getNom());
 			pr.setPrenom(particulierForm.getPrenom());

@@ -57,6 +57,10 @@ public class RatingServiceImpl implements RatingService {
 		evaluations.add(evaluation);
 		freelancer.setEvaluations(evaluations);
 		
+		evaluations = particulier.getEvaluations();
+		evaluations.add(evaluation);
+		particulier.setEvaluations(evaluations);
+		particulierRepository.save(particulier);
 		ratingRepository.save(evaluation);
 		freelancerRepository.save(freelancer);
 	}

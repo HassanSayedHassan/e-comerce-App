@@ -3,12 +3,15 @@ package org.sid.entities;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -30,7 +33,10 @@ public class Particulier implements java.io.Serializable {
 	private Set<Evaluation> evaluations = new HashSet<Evaluation>();
 	@OneToMany(targetEntity = Offre.class, mappedBy = "particulier",fetch = FetchType.EAGER)
 	private Set<Offre> offres = new HashSet<Offre>();
-	
+//	@OneToOne( cascade = CascadeType.ALL ,fetch = FetchType.EAGER) 
+//    @JoinColumn( name="idImage", nullable= true )
+//    private ImageProfile imageProfile;
+//            
 	public Particulier(String nom, String prenom, String email, Long mobile, String password, String adresse) {
 		super();
 		this.nom = nom;

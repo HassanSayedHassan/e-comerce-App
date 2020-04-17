@@ -16,7 +16,7 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-<link rel="stylesheet" type="text/css" href="../static/styles.css"
+<link rel="stylesheet" type="text/css" href="../../static/styles.css"
 	th:href="@{/styles.css}">
 
 </head>
@@ -60,7 +60,7 @@
 							</form>
 							<form th:action="@{/offres}" th:method="get">
 								<div>
-									<button type="submit" class="btn btn-outline-primary">Tous Afficher</button>
+									<button type="submit" class="btn btn-outline-primary">Tout Afficher</button>
 								</div>
 							</form>
 						</div>
@@ -70,18 +70,23 @@
 			<span class="position-absolute"> <!-- intersection trigger-->
 			</span>
 			<div class="row">
-				<div th:replace="Sectiontemplate :: aside"></div>
+				<div th:replace="sectiontemplate :: aside"></div>
 				<main class="col py-3">
+					<h3 th:if="${size}">
+					 Désolé ! aucune offre ne correspaond a votre recherche<br>
+					</h3>
 					<th:block th:each="f: ${offres}">
 						<div class="container mt-3">
 							<div class="media border p-3 w-100">
 								<div class="media-body">
-									<h4 th:text="${f.description}">
-										<i></i>
-									</h4>
-									<a href="#" class="btn btn-outline-primary">Message</a> <span
-										class="badge badge-success float-sm-right"
-										th:text="${f.particulier.nom}"> </span>
+									<h4 th:text="${f.particulier.nom}"></h4>
+									<p th:text="${f.description}"></p>
+									<div>
+									Mobile : <span th:text="'0'+${f.particulier.mobile}"></span>
+									<span class="float-sm-right">email : <span th:text="${f.particulier.email}"></span></span>
+									</div>
+									<a th:href="@{/AAseeProfileParticulier(id=${f.particulier.idParticulier})}" class="btn btn-outline-primary">voir profil</a> 
+									<span class="badge badge-success float-sm-right" th:text="${f.particulier.nom}"> </span>
 								</div>
 							</div>
 						</div>
@@ -95,7 +100,7 @@
 					</div>
 					<h4>Fin.</h4>
 				</main>
-				<div th:replace="Sectiontemplate :: section"></div>
+				<div th:replace="sectiontemplate :: section"></div>
 			</div>
 			
 		</div>

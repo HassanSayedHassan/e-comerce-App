@@ -23,10 +23,30 @@ public class ParticulierProfileController implements WebMvcConfigurer {
 	private ResearchService researchService;
 
 	@RequestMapping("/BBseeProfile")
-	public String seeProfile(Model model, @RequestParam(name = "id", defaultValue = "-1") Integer id,
+	public String seeProfileFreelancer(Model model, @RequestParam(name = "id") Integer id,
 			HttpSession session) {
-		model.addAttribute("isParticulier", true);
-		return "profilFreelancer";
+		Freelancer freelancer=  researchService.findFreelancerById(id);
+		model.addAttribute("particulier", session.getAttribute("particulier"));
+		model.addAttribute("freelancer", freelancer);
+		model.addAttribute("note", ratingService.recalculateAverage(freelancer).byteValue());
+		return "/profiles/profilFreelancer";
+	}
+
+	@RequestMapping(value = "/BBaddNote")
+	public String addNote(Model model, @RequestParam(name = "note" , defaultValue = "O") Integer note, @RequestParam("id") String id,
+			@RequestParam("idParticulier") String idParticulier, HttpSession session) {
+		Freelancer freelancer = researchService.findFreelancerById(Integer.parseInt(id));
+		Particulier particulier = researchService.findParticulierById(Integer.parseInt(idParticulier));
+		String page = "/profiles/profilFreelancer";
+		if (note <= 10 && note >= 0) {
+			ratingService.giveScore(freelancer, note.byteValue(), particulier);
+		} else {
+			model.addAttribute("message_Note", true);
+		}
+		model.addAttribute("particulier", session.getAttribute("particulier"));
+		model.addAttribute("note", ratingService.recalculateAverage(freelancer).byteValue());
+		model.addAttribute("freelancer", freelancer);
+		return page;
 	}
 
 	@RequestMapping(value = "/BBaddAvis")
@@ -38,7 +58,7 @@ public class ParticulierProfileController implements WebMvcConfigurer {
 		ratingService.addOpinion(aviss, freelancer, particulier);
 		model.addAttribute("isParticulier", true);
 		model.addAttribute("freelancer", freelancer);
-		return "profilFreelancer";
+		return "/profiles/profilFreelancer";
 	}
 
 	@RequestMapping("/BBdeleteOffre")
@@ -47,7 +67,7 @@ public class ParticulierProfileController implements WebMvcConfigurer {
 		researchService.deleteOfferById(id);
 		model.addAttribute("isParticulier", true);
 		model.addAttribute("particulier", researchService.findParticulierById(idParticulier));
-		return "profilParticulier";
+		return "/profiles/profilParticulier";
 	}
 
 	@RequestMapping("/BBaddOffre")
@@ -55,55 +75,36 @@ public class ParticulierProfileController implements WebMvcConfigurer {
 		Offre offre = new Offre(description);
 		Particulier particulier = researchService.findParticulierById(id);
 		researchService.addOffer(offre, particulier);
-		model.addAttribute("isParticulier", true);
 		model.addAttribute("particulier", particulier);
-		return "profilParticulier";
-	}
-
-	@RequestMapping(value = "/BBaddNote")
-	public String addNote(Model model, @RequestParam("note") Integer note, @RequestParam("id") String id,
-			@RequestParam("idParticulier") String idParticulier, HttpSession session) {
-		Freelancer freelancer = researchService.findFreelancerById(Integer.parseInt(id));
-		Particulier particulier = researchService.findParticulierById(Integer.parseInt(idParticulier));
-		if (note <= 10) {
-			ratingService.giveScore(freelancer, note.byteValue(), particulier);
-		}
-		model.addAttribute("isParticulier", true);
-		session.setAttribute("freelancer", freelancer);
-		return "redirect:/BBseeProfile";
+		return "/profiles/profilParticulier";
 	}
 
 	@RequestMapping("/BBmyParticulierProfilePage")
 	public String myParticulierProfilePage(Model model, HttpSession sesssion) {
 		model.addAttribute("particulier", sesssion.getAttribute("particulier"));
-		return "profilParticulier";
+		return "/profiles/profilParticulier";
 	}
 
 	@RequestMapping("/BBpageUpdateProfileParticulier")
 	public String pageUpdateProfileParticulier(Model model, HttpSession sesssion) {
 		model.addAttribute("particulier", sesssion.getAttribute("particulier"));
-		return "UpdateProfileParticulier";
+		return "/profiles/UpdateProfileParticulier";
 	}
 
 	@RequestMapping("/BBupdateProfileParticulierPersonnal")
 	public String updateProfileParticulierPersonnal(Model model, @RequestParam("nom") String nom,
 			@RequestParam("prenom") String prenom, @RequestParam("mobile") Long mobile,
 			@RequestParam("adresse") String adresse, @RequestParam("email") String email,
-			 @RequestParam("presentation") String presentation, HttpSession sesssion) {
-		String pageAfter = "UpdateProfileParticulier", currentPage = "UpdateProfileParticulier";
+			@RequestParam("presentation") String presentation, HttpSession sesssion) {
+		String pageAfter = "/profiles/UpdateProfileParticulier";
 		Particulier particulier = (Particulier) sesssion.getAttribute("particulier");
 		if (!researchService.findParticularByEmail(email).getIdParticulier().equals(particulier.getIdParticulier())
 				&& researchService.findFreelancerByEmail(email) != null) {
-			pageAfter = currentPage;
 			model.addAttribute("message_Update_false", true);
-
 		} else if (mobile.toString().length() != 10) {
-			pageAfter = currentPage;
 			model.addAttribute("message_Update_false", true);
-
 		} else {
 			model.addAttribute("message_Update", true);
-
 			particulier.setNom(nom);
 			particulier.setEmail(email);
 			particulier.setMobile(mobile);
@@ -114,7 +115,6 @@ public class ParticulierProfileController implements WebMvcConfigurer {
 		}
 		sesssion.setAttribute("particulier", particulier);
 		model.addAttribute("particulier", particulier);
-		model.addAttribute("isParticulier", true);
 		return pageAfter;
 	}
 
@@ -122,19 +122,14 @@ public class ParticulierProfileController implements WebMvcConfigurer {
 	public String updateProfileParticulierSecurity(Model model, @RequestParam("expassword") String exPassword,
 			@RequestParam("password") String newPassword, @RequestParam("repassword") String newPasswordVerify,
 			HttpSession sesssion) {
-		String pageAfter = "UpdateProfileParticulier", currentPage = "UpdateProfileParticulier";
+		String pageAfter = "/profiles/UpdateProfileParticulier";
 		Particulier particulier = (Particulier) sesssion.getAttribute("particulier");
 		if (!particulier.getPassword().equals(exPassword)) {
-			pageAfter = currentPage;
 			model.addAttribute("message_Update_false", true);
 		} else if (!newPassword.equals(newPasswordVerify)) {
-			pageAfter = currentPage;
 			model.addAttribute("message_Update_false", true);
-
 		} else if (newPassword.length() < 8) {
-			pageAfter = currentPage;
 			model.addAttribute("message_Update_false", true);
-
 		} else {
 			model.addAttribute("message_Update", true);
 			particulier.setPassword(newPassword);
@@ -142,7 +137,6 @@ public class ParticulierProfileController implements WebMvcConfigurer {
 		}
 		sesssion.setAttribute("particulier", particulier);
 		model.addAttribute("particulier", particulier);
-		model.addAttribute("isParticulier", true);
 		return pageAfter;
 	}
 

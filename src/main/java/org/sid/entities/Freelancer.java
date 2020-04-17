@@ -14,6 +14,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -43,7 +44,6 @@ public class Freelancer implements java.io.Serializable {
 	@ManyToOne(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JoinColumn(name = "idLocalisation")
 	private Localisation localisation;
-
 	public Set<Evaluation> getEvaluations() {
 		return evaluations;
 	}

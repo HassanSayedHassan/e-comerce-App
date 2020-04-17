@@ -26,7 +26,7 @@ public class FreelancerProfileController implements WebMvcConfigurer {
 	@RequestMapping("/AApageUpdateProfileFreelancer")
 	public String pageUpdateProfileFreelancer(Model model, HttpSession sesssion) {
 		model.addAttribute("freelancer", sesssion.getAttribute("freelancer"));
-		return "UpdateProfileFreelancer";
+		return "/profiles/UpdateProfileFreelancer";
 	}
 
 	@RequestMapping("/AAmyFreelancerProfilePage")
@@ -36,26 +36,21 @@ public class FreelancerProfileController implements WebMvcConfigurer {
 		int note = ratingService.recalculateAverage(freelancer).intValue();
 		model.addAttribute("note", note);
 		model.addAttribute("freelancer", freelancer);
-		return "profilFreelancer";
+		return "/profiles/profilFreelancer";
 	}
 
 	@RequestMapping("/AAupdateProfileFreelancerSecurity")
 	public String updateProfileFreelancerSecurity(Model model, @RequestParam("expassword") String exPassword,
 			@RequestParam("password") String newPassword, @RequestParam("repassword") String newPasswordVerify,
 			HttpSession sesssion) {
-		String pageAfter = "UpdateProfileFreelancer", currentPage = "UpdateProfileFreelancer";
+		String pageAfter = "/profiles/UpdateProfileFreelancer";
 		Freelancer freelancer = (Freelancer) sesssion.getAttribute("freelancer");
 		if (!freelancer.getPassword().equals(exPassword)) {
-			pageAfter = currentPage;
 			model.addAttribute("message_Update_false", true);
 		} else if (!newPassword.equals(newPasswordVerify)) {
-			pageAfter = currentPage;
 			model.addAttribute("message_Update_false", true);
-
 		} else if (newPassword.length() < 8) {
-			pageAfter = currentPage;
 			model.addAttribute("message_Update_false", true);
-
 		} else {
 			model.addAttribute("message_Update", true);
 			freelancer.setPassword(newPassword);
@@ -63,23 +58,20 @@ public class FreelancerProfileController implements WebMvcConfigurer {
 		}
 		sesssion.setAttribute("freelancer", freelancer);
 		model.addAttribute("freelancer", freelancer);
-		model.addAttribute("isParticulier", false);
 		return pageAfter;
 	}
 
 	@RequestMapping("/AAupdateProfileFreelancerProfessional")
-	public String updateProfileFreelancerProfessionalInformatio(Model model,
+	public String updateProfileFreelancerProfessionalInformation(Model model,
 			@RequestParam("experience") String experience, @RequestParam("diplome") String diplome,
 			@RequestParam("domaine") String domaine, @RequestParam("presentation") String presentation,
 			HttpSession sesssion) {
-		String pageAfter = "UpdateProfileFreelancer", currentPage = "UpdateProfileFreelancer";
+		String pageAfter = "/profiles/UpdateProfileFreelancer";
 		Freelancer freelancer = (Freelancer) sesssion.getAttribute("freelancer");
 		if (experience.length() == 0) {
-			pageAfter = currentPage;
 			model.addAttribute("message_Update_false", true);
 		} else if (diplome.length() == 0) {
 			model.addAttribute("message_Update_false", true);
-			pageAfter = currentPage;
 		} else {
 
 			model.addAttribute("message_Update", true);
@@ -91,7 +83,6 @@ public class FreelancerProfileController implements WebMvcConfigurer {
 		}
 		sesssion.setAttribute("freelancer", freelancer);
 		model.addAttribute("freelancer", freelancer);
-		model.addAttribute("isParticulier", false);
 		return pageAfter;
 	}
 
@@ -100,17 +91,13 @@ public class FreelancerProfileController implements WebMvcConfigurer {
 			@RequestParam("prenom") String prenom, @RequestParam("ville") String ville,
 			@RequestParam("mobile") Long mobile, @RequestParam("quartier") String quartier,
 			@RequestParam("email") String email, HttpSession sesssion) {
-		String pageAfter = "UpdateProfileFreelancer", currentPage = "UpdateProfileFreelancer";
+		String pageAfter = "/profiles/UpdateProfileFreelancer";
 		Freelancer freelancer = (Freelancer) sesssion.getAttribute("freelancer");
 		if (!researchService.findFreelancerByEmail(email).getIdFreelancer().equals(freelancer.getIdFreelancer())
 				&& researchService.findFreelancerByEmail(email) != null) {
-			pageAfter = currentPage;
 			model.addAttribute("message_Update_false", true);
-
 		} else if (mobile.toString().length() != 10) {
-			pageAfter = currentPage;
 			model.addAttribute("message_Update_false", true);
-
 		} else {
 			model.addAttribute("message_Update", true);
 			freelancer.setNom(nom);
@@ -126,7 +113,6 @@ public class FreelancerProfileController implements WebMvcConfigurer {
 		}
 		sesssion.setAttribute("freelancer", freelancer);
 		model.addAttribute("freelancer", freelancer);
-		model.addAttribute("isParticulier", false);
 		return pageAfter;
 	}
 
@@ -148,15 +134,12 @@ public class FreelancerProfileController implements WebMvcConfigurer {
 				}
 			}
 			if (!compExist) {
-				//competence = new Competence(domaine);
 				researchService.addSkill(competence, freelancer);
-
 			}
 		}
 		sesssion.setAttribute("freelancer", freelancer);
 		model.addAttribute("freelancer", freelancer);
-		model.addAttribute("isParticulier", false);
-		return "profilFreelancer";
+		return "/profiles/profilFreelancer";
 	}
 
 	@RequestMapping("/AAdeleteCompetance")
@@ -167,15 +150,13 @@ public class FreelancerProfileController implements WebMvcConfigurer {
 		researchService.deleteSkills(competence, freelancer);
 		sesssion.setAttribute("freelancer", freelancer);
 		model.addAttribute("freelancer", freelancer);
-		model.addAttribute("isParticulier", false);
-		return "profilFreelancer";
+		return "/profiles/profilFreelancer";
 	}
 
-	@RequestMapping("/seeProfileParticulier")
+	@RequestMapping("/AAseeProfileParticulier")
 	public String seeProfileParticulier(Model model, @RequestParam("id") Integer id) {
-		model.addAttribute("isParticulier", true);
 		model.addAttribute("particulier", researchService.findParticulierById(id));
-		return "profilParticulier";
+		return "/profiles/profilParticulier";
 	}
 
 }

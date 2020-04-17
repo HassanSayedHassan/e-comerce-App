@@ -27,11 +27,6 @@ public class SecurityConfiguration {
 		@Autowired
 		private DataSource dataSource;
 
-		@Bean
-		public PasswordEncoder passwordEncoder() {
-			return new org.sid.security.PasswordEncoder();
-		}
-
 		@Override
 		protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 			auth.jdbcAuthentication().dataSource(dataSource)
@@ -39,7 +34,7 @@ public class SecurityConfiguration {
 							"select email as principal, password as credentials, 1 from freelancer where email=?")
 					.authoritiesByUsernameQuery(
 							"select email as principal, 'FREELANCER' as role from freelancer where email=?")
-					.rolePrefix("ROLE_").passwordEncoder(passwordEncoder());
+					.rolePrefix("ROLE_").passwordEncoder(new org.sid.security.PasswordEncoder());
 		}
 
 		@Bean
@@ -56,7 +51,7 @@ public class SecurityConfiguration {
 					.failureUrl("/AAloginErrorFreelancer?error=loginError")
 					.successForwardUrl("/AAconnexionSuccessFreelancer");
 			http.logout().logoutUrl("/AAlogoutFreelancer").logoutSuccessUrl("/logoutFreelancer")
-			//.deleteCookies("JSESSIONID")
+			// .deleteCookies("JSESSIONID")
 			;
 			http.exceptionHandling().accessDeniedPage("/403");
 		}
@@ -100,7 +95,7 @@ public class SecurityConfiguration {
 					.failureUrl("/BBloginErrorParticulier?error=loginError")
 					.successForwardUrl("/BBconnexionSuccessParticulier");
 			http.logout().logoutUrl("/BBlogoutParticulier").logoutSuccessUrl("/logoutParticulier")
-			//.deleteCookies("JSESSIONID")
+			// .deleteCookies("JSESSIONID")
 			;
 			http.exceptionHandling().accessDeniedPage("/403");
 		}

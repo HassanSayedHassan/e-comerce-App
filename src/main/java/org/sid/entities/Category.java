@@ -2,6 +2,7 @@ package org.sid.entities;
 
 import java.util.Collection;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,7 +18,8 @@ public class Category {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
+	private String photo;
 	private String description;
-	@OneToMany(mappedBy = "category")
+	@OneToMany(mappedBy="category",cascade=CascadeType.REMOVE)
 	private Collection<Product> products;
 }
